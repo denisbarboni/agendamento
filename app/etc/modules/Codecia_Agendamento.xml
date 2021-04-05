@@ -1,0 +1,8 @@
+<config>
+  <modules>
+    <Codecia_Agendamento>
+      <active>true</active>
+      <codePool>community</codePool>
+    </Codecia_Agendamento>
+  </modules>
+</config>

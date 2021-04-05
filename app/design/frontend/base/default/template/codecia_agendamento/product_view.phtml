@@ -1,0 +1,71 @@
+<?php
+/** @var Codecia_Agendamento_Block_Productview $this */
+/** @var Codecia_Agendamento_Helper_Data $helper */
+$helper = Mage::helper('codecia_agendamento');
+if ($helper && $helper->isActive()): ?>
+    <?php $product = $this->getCurrentProduct(); ?>
+    <?php if ($product):
+        $dadosAgendamento = $this->getDadosAgendamento();
+        if ($dadosAgendamento):?>
+            <head>
+                <link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl().'codecia_agendamento/css/plugin/datetimepicker/jquery.datetimepicker.css' ?>"/>
+            </head>
+
+            <script src="<?php echo $this->getSkinUrl().'codecia_agendamento/js/plugin/datetimepicker/jquery.datetimepicker.full.js' ?>"></script>
+
+            <script>
+                jQuery(document).ready(function () {
+                    'use strict';
+
+                    jQuery.datetimepicker.setLocale('pt');
+                    jQuery('#options_2_text').datetimepicker({
+                        minDate: 0,
+                        minTime: 0,
+                        formatDate:'d/m/Y',
+                        scrollMonth: false,
+                        scrollTime: false,
+                        scrollInput:false,
+                        yearStart: 2021,
+                        disabledWeekDays:[
+                            <?php echo $this->getDisabledWeekDays(); ?>
+                        ],
+                        //allowDates:[
+                        //    <?php //echo $this->getDates(); ?>
+                        //],
+                        allowTimes:[
+                            <?php echo $this->getHours(); ?>
+                            '23:59'
+                        ],
+                        onSelectDate:function(ct, i){
+
+                            console.log('ct', ct);
+                            console.log('i', i);
+
+                            jQuery.ajax({
+                                url: '/cc_agendamento/index/hours/',
+                                type: 'POST',
+                                contentType: false,
+                                data: {aa: ct},
+                                processData: false,
+                                cache: false,
+                                dataType: 'json'
+                            }).done(function(data) {
+                                if(data.status){
+                                    jQuery(".xdsoft_time_variant").html(data.html);
+                                }
+                            });
+
+
+
+
+                            // setTimeout(function () {
+                            //     jQuery(".xdsoft_time_variant").html("<div class=\"xdsoft_time\" data-hour=\"8\" data-minute=\"0\">08:00</div>");
+                            // }, 200);
+
+                        }
+                    });
+                });
+            </script>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>
